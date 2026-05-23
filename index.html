@@ -599,16 +599,12 @@ void main() {
 </div>
 
 </div>
-<button class="btn" onclick="openPopup('https://dartpad.dev/f22ccde5370784fcafd6d8cdcb5e281d ?run=true')">Lihat DartPad</button>
+<button class="btn" onclick="openPopup('https://dartpad.dev/f22ccde5370784fcafd6d8cdcb5e281d?run=true')">Lihat DartPad</button>
 </div>
 
-
 <div class="card">
-<h2>01. Masalah Tanpa Generic</h2>
-<p>Class Box menggunakan dynamic sehingga bisa menyimpan tipe data apa saja, tetapi hal ini berisiko karena bisa menyebabkan runtime error jika tipe data tidak sesuai.</p>
-
-<h3 style="color: #00cfff; margin-top: 50px;">🔵 Success</h3>
-<p style="color: #ccc; font-size: 0.9em;">Program berhasil dieksekusi karena tipe data yang dikirim dan diterima sudah sinkron.</p>
+<h2>08. Unnamed Extensions</h2>
+<p>Unnamed Extension adalah extension tanpa nama yang hanya dapat digunakan di dalam file yang sama. Jenis extension ini biasanya dipakai untuk penggunaan internal agar tidak dapat diakses dari file lain sehingga kode menjadi lebih aman dan terstruktur.</p>
 
 <div class="card">
 <div class="code-box">
@@ -620,57 +616,32 @@ void main() {
 // NIM   : 251410028
 // Kelas : SI2A
 
-class Box {
-  dynamic data; // Bisa apa saja
-  Box(this.data);
+extension on DateTime {
+  String get simpleDate {
+    return '$day/$month/$year';
+  }
+
+  DateTime get startOfDay {
+    return DateTime(year, month, day);
+  }
 }
 
 void main() {
-  var box = Box(42);
-  int value = box.data; // aman kalau isinya int
-  print(value);
-}
-</pre>
-
-</div>
-<button class="btn" onclick="openPopup('Tanpa generic.jpeg?run=true')">Klik Outout Success</button>
-</div>
-
-<h3 style="color: #ff4d4d; margin-top: 50px;">🔴 Error</h3>
-<p style="color: #ccc; font-size: 0.9em;">Terjadi 'Type Error' akibat pemaksaan tipe data String ke dalam wadah Integer.</p>
-
-<div class="card">
-<div class="code-box">
-
-<pre>
-// Nama  : Marsya Dwi Lintang
-// NIM   : 251410028
-// Kelas : SI2A
-
-class Box {
-  dynamic data;
-  Box(this.data);
-}
-
-void main() {
-  var box = Box("Hello");
-  int value = box.data; // ERROR karena bukan int
-  print(value);
+  var today = DateTime.now();
+  print(today.simpleDate);   
+  print(today.startOfDay);
 }
 </pre>
 
 </div>
 
 </div>
-<button class="btn" onclick="openPopup('error generic.jpeg?run=true')">Klik Outout Error</button>
+<button class="btn" onclick="openPopup('https://dartpad.dev/19e177fca403a1829712370e0dbe5538?run=true')">Lihat DartPad</button>
 </div>
 
 <div class="card">
-<h2>02. Solusi dengan Generic</h2>
-<p>Generic digunakan untuk menentukan tipe data sejak awal sehingga lebih aman dan menghindari kesalahan seperti pada dynamic.</p>
-
-<h3 style="color: #00cfff; margin-top: 50px;">🔵 Success</h3>
-<p style="color: #ccc; font-size: 0.9em;">tipe sudah ditentukan int, jadi data pasti angka dan aman digunakan.</p>
+<h2>09. Konflik Nama Extension</h2>
+<p>Konflik nama extension terjadi ketika terdapat dua extension dengan nama method yang sama pada tipe data yang sama. Hal ini membuat Dart bingung menentukan method mana yang harus digunakan sehingga menyebabkan error. Untuk mengatasinya dapat menggunakan prefix import atau show/hide.</p>
 
 <div class="card">
 <div class="code-box">
@@ -682,71 +653,44 @@ void main() {
 // NIM   : 251410028
 // Kelas : SI2A
 
-class Box<T> {
-  T data;
-  Box(this.data);
+extension StringCaseExtensions on String {
+  String capitalize() {
+    return this[0].toUpperCase() +
+        substring(1);
+  }
+}
+
+extension TextUtilsExtensions on String {
+  String capitalize() {
+    return toUpperCase();
+  }
 }
 
 void main() {
-  var box = Box<int>(42);
-  int value = box.data; // aman karena sesuai tipe
-  print(value);
-}
-</pre>
 
-</div>
-<button class="btn" onclick="openPopup('dengan generic.jpeg?run=true')">Klik Outout Success</button>
-</div>
+  var text = 'hello';
 
-<h3 style="color: #ff4d4d; margin-top: 50px;">🔴 Error</h3>
-<p style="color: #ccc; font-size: 0.9em;">Error terjadi karena tipe data pada generic sudah ditentukan sejak awal. Pada Box<String>, data yang boleh disimpan hanya bertipe String. Sehingga ketika dimasukkan tipe lain seperti int, akan terjadi error.</p>
+  print(
+    StringCaseExtensions(text)
+        .capitalize(),
+  );
 
-<div class="card">
-<div class="code-box">
-
-<pre>
-// Nama  : Marsya Dwi Lintang
-// NIM   : 251410028
-// Kelas : SI2A
-
-class Box<T> {
-  T data;
-  Box(this.data);
-}
-
-void main() {
-  var intBox = Box<int>(42);
-  var stringBox = Box<String>('Hello');
-
-  int value = intBox.data; // aman
-
-  stringBox.data = 123; // ERROR compile-time
+  print(
+    TextUtilsExtensions(text)
+        .capitalize(),
+  );
 }
 </pre>
 
 </div>
 
 </div>
-<button class="btn" onclick="openPopup('error generic2.jpeg?run=true')">Klik Outout Error</button>
-</div>
-  
-<div class="card">
-<h2>Sintaks Generic Dasar</h2>
-<p>
-Generic ditulis menggunakan tanda < > untuk menentukan tipe data yang digunakan dalam class atau function. Dengan cara ini, kita bisa menggunakan satu kode yang sama untuk berbagai tipe data tanpa harus membuat ulang.
-<ul>
-<li>T = Type</li>
-<li>E = Element (collection)</li>
-<li>K = Key</li>
-<li>V = Value</li>
-<li>R = Return type</li>
-</ul>
-</p>
+<button class="btn" onclick="openPopup('https://dartpad.dev/f0cae19f5d8325538618b5e21e5e2ed0?run=true')">Lihat DartPad</button>
 </div>
 
 <div class="card">
-<h2>03. Contoh Sintaks Generic pada class dan function</h2>
-<p>Generic tidak hanya digunakan pada class, tetapi juga bisa digunakan pada function. Dengan generic, class dan function bisa bekerja dengan berbagai tipe data tanpa harus membuat kode baru.</p>
+<h2>10. Extension untuk Custom Classes</h2>
+<p>Extension Methods tidak hanya dapat digunakan pada tipe bawaan Dart, tetapi juga bisa diterapkan pada custom class buatan sendiri. Dengan extension, programmer dapat menambahkan fitur baru pada class tanpa harus mengubah isi class aslinya sehingga kode menjadi lebih rapi dan mudah dikembangkan.</p>
 
 <div class="card">
 <div class="code-box">
@@ -757,590 +701,120 @@ Generic ditulis menggunakan tanda < > untuk menentukan tipe data yang digunakan 
 // Nama  : Marsya Dwi Lintang
 // NIM   : 251410028
 // Kelas : SI2A
-
-class MyClass<T> {
-  T data;
-  MyClass(this.data);
-
-  T getData() {
-    return data;
-  }
-}
-
-T myFunc<T>(T value) {
-  return value;
-}
-
-void main() {
-  var myInt = MyClass<int>(10);
-  print(myInt.getData());
-
-  var myString = MyClass<String>("test");
-  print(myString.getData());
-
-  var angka = myFunc<int>(100);
-  print(angka);
-
-  var teks = myFunc<String>("hello");
-  print(teks);
-}
-</pre>
-
-</div>
-
-</div>
-<button class="btn" onclick="openPopup('https://dartpad.dev/ee8c90892b8d7fbf5d72af5bb4834c6c?run=true')">Lihat DartPad</button>
-</div>
-
-<div class="card">
-<h2>04. Contoh Kelas Box<T></h2>
-<p>Generic memungkinkan satu class digunakan untuk berbagai tipe data. Pada Box<T>, tipe ditentukan saat objek dibuat, dan _value menyimpan data secara fleksibel.</p>
-
-<div class="card">
-<div class="code-box">
-
-<h3>DART SOURCE CODE</h3>
-
-<pre>
-// Nama  : Marsya Dwi Lintang
-// NIM   : 251410028
-// Kelas : SI2A
-
-class Box<T> {
-  T? _value;
-
-  Box(this._value);
-
-  T? get value => _value;
-
-  void setValue(T value) {
-    _value = value;
-  }
-}
-
-void main() {
-  var intBox = Box(10);
-  print('Int Box Value: ${intBox.value}');
-
-  intBox.setValue(20);
-  print('Int Box Value After Set: ${intBox.value}');
-
-  var stringBox = Box('Hello, Generic!');
-  print('String Box Value: ${stringBox.value}');
-
-  stringBox.setValue('Hello World');
-  print('String Box Value After Set: ${stringBox.value}');
-
-  var doubleBox = Box(3.14);
-  print('Double Box Value: ${doubleBox.value}');
-}
-</pre>
-
-</div>
-
-</div>
-<button class="btn" onclick="openPopup('https://dartpad.dev/945d07dd296d5db29073fbb2e0988e6c?run=true')">Lihat DartPad</button>
-</div>
-
-<div class="card">
-<h2>05. Multiple Type parameters</h2>
-<p>Generic tidak hanya menggunakan satu tipe <T>, tetapi juga bisa menggunakan lebih dari satu tipe seperti <K, V> untuk menyimpan dua data dengan tipe berbeda.</p>
-
-<div class="card">
-<div class="code-box">
-
-<h3>DART SOURCE CODE</h3>
-
-<pre>
-// Nama  : Marsya Dwi Lintang
-// NIM   : 251410028
-// Kelas : SI2A
-
-class Pair<K, V> {
-  K key;
-  V value;
-
-  Pair(this.key, this.value);
-}
-
-void main() {
-  
-  var pair1 = Pair("age", 19);
-  print("Key: ${pair1.key}");
-  print("Value: ${pair1.value}");
-
-  var pair2 = Pair("Name", "Dwi");
-  print("Key: ${pair2.key}");
-  print("Value: ${pair2.value}");
-
-  var pair3 = Pair(1, 2.71);
-  print("Key: ${pair3.key}");
-  print("Value: ${pair3.value}");
-}
-</pre>
-
-</div>
-
-</div>
-<button class="btn" onclick="openPopup('https://dartpad.dev/bb49172dec979bc7259a0af43b93893d?run=true')">Lihat DartPad</button>
-</div>
-
-<div class="card">
-<h2>06. Menggabungkan dua nilai dengan tipe data yang berbeda.</h2>
-<p>Generic function bisa memakai dua tipe <T, U> untuk menggabungkan dua nilai dengan tipe berbeda.</p>
-
-<div class="card">
-<div class="code-box">
-
-<h3>DART SOURCE CODE</h3>
-
-<pre>
-// Nama  : Marsya Dwi Lintang
-// NIM   : 251410028
-// Kelas : SI2A
-
-String combine<T, U>(T value1, U value2) {
-  return '$value1, $value2';
-}
-
-void main() {
-  var result1 = combine<String, int>('Number is', 10);
-  print(result1); // Output: Number is, 10
-
-  var result2 = combine<int, double>(10, 20.5);
-  print(result2); // Output: 10, 20.5
-}
-</pre>
-
-</div>
-
-</div>
-<button class="btn" onclick="openPopup('https://dartpad.dev/36aca83cfe25f4a57b2a05987d193511?run=true')">Lihat DartPad</button>
-</div>
-
-<div class="card">
-<h2>07. Generic dengan extends.</h2>
-<p>Generic dengan extends digunakan untuk membatasi tipe data yang dapat digunakan pada parameter generic.</p>
-
-<h3 style="color: #00cfff; margin-top: 50px;">🔵 Success</h3>
-<p style="color: #ccc; font-size: 0.9em;">Pada Dart, T extends num membatasi bahwa tipe data hanya boleh int atau double. Karena yang digunakan sesuai, maka program berhasil dijalankan.</p>
-
-<div class="card">
-<div class="code-box">
-
-<h3>DART SOURCE CODE</h3>
-
-<pre>
-// Nama  : Marsya Dwi Lintang
-// NIM   : 251410028
-// Kelas : SI2A
-
-class NumberBox<T extends num> {
-  T value;
-
-  NumberBox(this.value);
-
-  T getValue() {
-    return value;
-  }
-}
-
-void main() {
-  var intBox = NumberBox<int>(10);
-  print("int box value: ${intBox.getValue()}");
-
-  var doubleBox = NumberBox<double>(3.14);
-  print("double box value: ${doubleBox.getValue()}");
-}
-</pre>
-
-</div>
-<button class="btn" onclick="openPopup('geric extends.jpeg?run=true')">Klik Outout Success</button>
-</div>
-
-<h3 style="color: #ff4d4d; margin-top: 50px;">🔴 Error</h3>
-<p style="color: #ccc; font-size: 0.9em;">Terjadi error karena menggunakan String, sedangkan T extends num hanya mengizinkan tipe data numerik. String tidak termasuk, sehingga program gagal dijalankan.</p>
-
-<div class="card">
-<div class="code-box">
-
-<pre>
-// Nama  : Marsya Dwi Lintang
-// NIM   : 251410028
-// Kelas : SI2A
-
-class NumberBox<T extends num> {
-  T value;
-
-  NumberBox(this.value);
-}
-
-void main() {
-  var stringBox = NumberBox<String>("test"); // ERROR
-}
-</pre>
-
-</div>
-
-</div>
-<button class="btn" onclick="openPopup('error extends.jpeg.png?run=true')">Klik Outout Error</button>
-</div>
-
-<div class="card">
-<h2>08. Type Inference (Inferensi Tipe)</h2>
-<p>Pada Dart, type inference adalah kemampuan untuk menentukan tipe data secara otomatis berdasarkan nilai yang diberikan. Pada myFunc(10), tipe T otomatis menjadi int, dan pada myFunc("test"), tipe T menjadi string.</p>
-
-<div class="card">
-<div class="code-box">
-
-<h3>DART SOURCE CODE</h3>
-
-<pre>
-// Nama  : Marsya Dwi Lintang
-// NIM   : 251410028
-// Kelas : SI2A
-
-T myFunc<T>(T value) {
-  return value;
-}
-
-void main() {
-  var intValue = myFunc(10); 
-  print(intValue.runtimeType); 
-
-  var stringValue = myFunc("test"); 
-  print(stringValue.runtimeType);
-}
-</pre>
-
-</div>
-
-</div>
-<button class="btn" onclick="openPopup('https://dartpad.dev/05f83c2965310857118250909b2719f3?run=true')">Lihat DartPad</button>
-</div>
-
-<div class="card">
-<h2>Pembatasan Tipe dan manfaatnya</h2>
-<p>
-Pada Dart, pembatasan tipe digunakan untuk memastikan bahwa generic hanya menerima tipe data tertentu yang sesuai.
-<ul>
-<li>Manfaatnya:</li>
-<li>Mencegah kesalahan tipe data (lebih aman).</li>
-<li>Membuat kode lebih jelas dan mudah dibaca.</li>
-<li>Memastikan hanya tipe yang sesuai yang bisa digunakan.</li>
-<li>Membantu penulisan kode lebih terstruktur.</li>
-</ul>
-</p>
-</div>
-
-<div class="card">
-<h2>09. Pembatasan Tipe pada Interface dan Class</h2>
-<p>Pada Dart, pembatasan tipe pada interface dan class digunakan untuk membatasi tipe data generice agar hanya menerima tipe tertentu. Hal ini dilakukan dengan menggunakan extends, sehingga hanya class atau interface yang sesuai yang bisa digunakan.</p>
-
-<h3 style="color: #00cfff; margin-top: 50px;">🔵 Success</h3>
-<p style="color: #ccc; font-size: 0.9em;">Pada Dart, T extends Interable berarti hanya tipe data yang bisa di-interasi (seperti List dan Set)yang diperolehkan. Karena sesuai, program berhasil dijalankna.</p>
-
-<div class="card">
-<div class="code-box">
-
-<h3>DART SOURCE CODE</h3>
-
-<pre>
-// Nama  : Marsya Dwi Lintang
-// NIM   : 251410028
-// Kelas : SI2A
-
-void printIterable<T extends Iterable<dynamic>>(T iterable) {
-  for (var item in iterable) {
-    print(item);
-  }
-}
-
-void main() {
-  printIterable<List<int>>([1, 2, 3]); 
-  // Output: 1 2 3
-
-  printIterable<Set<String>>({'apple', 'banana'}); 
-  // Output: apple banana
-}
-</pre>
-
-</div>
-<button class="btn" onclick="openPopup('interface.jpeg?run=true')">Klik Outout Success</button>
-</div>
-
-<h3 style="color: #ff4d4d; margin-top: 50px;">🔴 Error</h3>
-<p style="color: #ccc; font-size: 0.9em;">Terjadi error karena menggunakan String, sedangkan T extends num hanya mengizinkan tipe data numerik. String tidak termasuk, sehingga program gagal dijalankan.</p>
-
-<div class="card">
-<div class="code-box">
-
-<pre>
-// Nama  : Marsya Dwi Lintang
-// NIM   : 251410028
-// Kelas : SI2A
-
-void printIterable(dynamic iterable) {
-  for (var item in iterable) { 
-    print(item);
-  }
-}
-
-void main() {
-  printIterable(10); 
-}
-
-</pre>
-
-</div>
-
-</div>
-<button class="btn" onclick="openPopup('error interface.jpeg?run=true')">Klik Outout Error</button>
-</div>
-
-<div class="card">
-<h2>10. Pembatasan Tipe dengan Class Abstract</h2>
-<p>Pembatasan tipe dengan class abstract adalah cara membatasi tipe data pada generic agar hanya bisa menggunakan class tertentu atau turunannya. Pada contoh ini digunakan T extends Animal, artinya hanya class yang mewarisi Animal yang boleh dipakai.</p>
-
-<h3 style="color: #00cfff; margin-top: 50px;">🔵 Success</h3>
-<p style="color: #ccc; font-size: 0.9em;">Program berhasil dijalankan karena tipe data yang digunakan sesuai dengan batasan T extends Animal, yaitu memakai turunan seperti Dog dan Cat.</p>
-
-<div class="card">
-<div class="code-box">
-
-<h3>DART SOURCE CODE</h3>
-
-<pre>
-// Nama  : Marsya Dwi Lintang
-// NIM   : 251410028
-// Kelas : SI2A
-
-abstract class Animal {
-  void makeSound();
-}
-
-class Dog implements Animal {
-  @override
-  void makeSound() {
-    print('Woof!');
-  }
-}
-
-class Cat implements Animal {
-  @override
-  void makeSound() {
-    print('Meow!');
-  }
-}
-
-class AnimalCage<T extends Animal> {
-  T animal;
-
-  AnimalCage(this.animal);
-
-  void sound() {
-    animal.makeSound();
-  }
-}
-
-void main() {
-  var dogCage = AnimalCage(Dog());
-  dogCage.sound(); // Woof!
-
-  var catCage = AnimalCage(Cat());
-  catCage.sound(); // Meow!
-}
-</pre>
-
-</div>
-<button class="btn" onclick="openPopup('ubah class.jpeg?run=true')">Klik Outout Success</button>
-</div>
-
-<h3 style="color: #ff4d4d; margin-top: 50px;">🔴 Error </h3>
-<p style="color: #ccc; font-size: 0.9em;">Program gagal dijalankan karena tipe data tidak sesuai dengan batasan, yaitu menggunakan String yang bukan turunan dari Animal.</p>
-
-<div class="card">
-<div class="code-box">
-
-<pre>
-// Nama  : Marsya Dwi Lintang
-// NIM   : 251410028
-// Kelas : SI2A
-
-abstract class Animal {
-  void makeSound();
-}
-
-class AnimalCage<T extends Animal> {
-  T animal;
-
-  AnimalCage(this.animal);
-}
-
-void main() {
-  var stringCage = AnimalCage<String>('test'); // ERROR
-}
-
-</pre>
-
-</div>
-
-</div>
-<button class="btn" onclick="openPopup('ubah error class.jpeg?run=true')">Klik Outout Error</button>
-</div>
-
-<div class="card">
-<h2>Praktik 1 - Generic Class & Fungsi</h2>
-<p>Repository<T>adalah calss generic untuk menyimpan dan mengambil data dengan tipe bebas sesuai T, swap<T> adalah fungsi generic untuk menukar posisi dua data dalam list tanpa tergantung tipe, dan Triple<A, B, C> adalah class generic untuk menimpan tiga data dengan tipe yang berbeda dalam satu objek.</p>
-
-<div class="card">
-<div class="code-box">
-
-<h3>DART SOURCE CODE</h3>
-
-<pre>
-// Nama  : Marsya Dwi Lintang
-// NIM   : 251410028
-// Kelas : SI2A
-
-class Repository<T> {
-  Map<int, T> data = {};
-
-  void save(int id, T item) {
-    data[id] = item;
-  }
-
-  T getById(int id) {
-    return data[id]!;
-  }
-
-  List<T> getAll() {
-    return data.values.toList();
-  }
-}
-
-void swap<T>(List<T> list, int i, int j) {
-  var temp = list[i];
-  list[i] = list[j];
-  list[j] = temp;
-}
-
-class Triple<A, B, C> {
-  A first;
-  B second;
-  C third;
-
-  Triple(this.first, this.second, this.third);
-}
-
-void main() {
-  var repo = Repository<String>();
-  repo.save(1, "Data 1");
-  repo.save(2, "Data 2");
-
-  print(repo.getById(1));
-  print(repo.getAll());
-
-  var list = [1, 2, 3];
-  swap(list, 0, 2);
-  print(list);
-
-  var t = Triple<String, int, double>("Hello", 10, 3.14);
-  print("${t.first}, ${t.second}, ${t.third}");
-}
-</pre>
-
-</div>
-
-</div>
-<button class="btn" onclick="openPopup('https://dartpad.dev/9a21c0f600eb6a74bb2034eabe6cb0bd?run=true')">Lihat DartPad</button>
-</div>
-
-<div class="card">
-<h2>Generic vs Dynamic vs Object</h2>
-<ul>
-<li>Generic, Tipe data sudah ditentukan sejak awal, sehingga lebih aman dan tidak perlu konversi saat digunakan.</li>
-<li>Dynamic, Tipe data bisa berubah-ubah, fleksibel digunakan, tetapi berisiko error saat program berjalan.</li>
-<li>Object, Bisa menyimpan berbagai tipe data, namun perlu penyesuaian tipe (casting) saat digunakan.</li>
-</ul>
-
-<div class="code-box">
-
-<pre>
-// Contoh perbedaan
-Box box1 = Box(42);   // Generic: aman
-dynamic box2 = 42;   // Dynamic: tidak aman
-Object box3 = 42;   // Object: perlu casting
-</pre>
-
-</div>
-</div>
-
-<div class="card">
-<h2>11. Studi Kasus - Cache Generic</h2>
-<p>Cache Generic adalah tempat penyimpanan data sementara yang bisa digunakan untuk berbagai tipe data tanpa harus membuat class berbeda-beda.</p>
-
-<div class="card">
-<div class="code-box">
-
-<h3>DART SOURCE CODE</h3>
-
-<pre>
-// Nama  : Marsya Dwi Lintang
-// NIM   : 251410028
-// Kelas : SI2A
-
-class Cache<T> {
-  final Map<String, T> _storage = {};
-
-  void set(String key, T value) {
-    _storage[key] = value;
-  }
-
-  T get(String key) {
-    return _storage[key] as T;
-  }
-
-  void remove(String key) {
-    _storage.remove(key);
-  }
-}
 
 class Product {
-  String name;
-  int price;
+  final String name;
+  final double price;
 
   Product(this.name, this.price);
 }
 
+extension DoubleRupiahFormatter on double {
+
+  String toRupiah() {
+
+    final intValue = toInt();
+
+    String numberString =
+        intValue.toString();
+
+    String formattedString = '';
+
+    int counter = 0;
+
+    for (
+      int i = numberString.length - 1;
+      i >= 0;
+      i--
+    ) {
+
+      formattedString =
+          numberString[i] +
+          formattedString;
+
+      counter++;
+
+      if (
+        counter % 3 == 0 &&
+        i != 0
+      ) {
+
+        formattedString =
+            '.' + formattedString;
+      }
+    }
+
+    return 'Rp$formattedString';
+  }
+}
+
+extension ProductExtensions on Product {
+
+  Product withDiscount(
+    double percentage,
+  ) {
+
+    var discountedPrice =
+        price *
+        (1 - percentage / 100);
+
+    return Product(
+      name,
+      discountedPrice,
+    );
+  }
+
+  String get displayInfo =>
+      '$name - ${price.toRupiah()}';
+
+  bool get isExpensive =>
+      price > 1000000;
+}
+
 void main() {
-  var userCache = Cache<String>();
-  userCache.set('name', 'Lintang');
 
-  var productCache = Cache<Product>();
-  productCache.set('p1', Product('Laptop', 1000));
+  var laptop =
+      Product(
+    'Laptop',
+    15000000,
+  );
 
-  print(userCache.get('name'));
-  print(productCache.get('p1').name);
+  var discounted =
+      laptop.withDiscount(10);
+
+  print(
+    discounted.displayInfo,
+  );
+
+  print(
+    laptop.isExpensive,
+  );
+
+  var keyboard =
+      Product(
+    'Keyboard',
+    750000,
+  );
+
+  print(
+    keyboard.displayInfo,
+  );
+
+  print(
+    keyboard.isExpensive,
+  );
 }
 </pre>
 
 </div>
 
 </div>
-<button class="btn" onclick="openPopup('https://dartpad.dev/bac3177af8cf6403df80e313861b973e?run=true')">Lihat DartPad</button>
+<button class="btn" onclick="openPopup('https://dartpad.dev/537dd345ed535eedf9978732cdd621ae?run=true')">Lihat DartPad</button>
 </div>
 
 <div class="card">
-<h2>Ringkasan</h2>
-<p>
-Generic adalah cara membuat kode yang bisa digunakan untuk berbagai tipe data dengan tetap aman (type-safe), digunakan pada class, function, dan collection agar lebih fleksibel; Dart juga meimilki type inference untuk menebak tipe secara otomatis serta constraints untuk membatasi tipe data sesuai kebutuhan.
-</p>
-</div>
-
-<div class="card">
-<h2>Latihan</h2>
-<p>Latihan ini bertujuan untuk memahami penggunaan generic dalam berbagai bentuk. Class Stack<T> digunakan untuk menyimpan data dengan konsep tumpukan (LIFO), dengan method push, pop, dan peek. Fungsi mergeLists<T> digunakan untuk menggabungkan dua list dengan tipe data yang sama. Sedangkan class Response<T> digunakan sebagai wadah data yang fleksibel, yang bisa menyimpan hasil (data) atau pesan error dengan berbagai tipe.</p>
+<h2>11. Praktik 2- Validator Extensions</h2>
+<p>Validator Extension digunakan untuk membantu proses validasi data seperti email, password, nomor telepon, atau angka. Dengan extension, proses pengecekan data menjadi lebih singkat, rapi, dan mudah digunakan langsung pada object.</p>
 
 <div class="card">
 <div class="code-box">
@@ -1352,56 +826,62 @@ Generic adalah cara membuat kode yang bisa digunakan untuk berbagai tipe data de
 // NIM   : 251410028
 // Kelas : SI2A
 
-class Stack<T> {
-  final List<T> _items = [];
+extension StringValidators on String {
 
-  void push(T value) {
-    _items.add(value);
+  bool get isEmail {
+    return contains('@');
   }
 
-  T pop() {
-    return _items.removeLast();
-  }
-
-  T peek() {
-    return _items.last;
+  bool get isStrongPassword {
+    return length >= 8;
   }
 }
 
-List<T> mergeLists<T>(List<T> a, List<T> b) {
-  return [...a, ...b];
-}
+extension IntValidators on int {
 
-class Response<T> {
-  T? data;
-  String? error;
+  bool get isEven {
+    return this % 2 == 0;
+  }
 
-  Response({this.data, this.error});
+  bool get isPositive {
+    return this > 0;
+  }
 }
 
 void main() {
-  // Stack
-  var stack = Stack<int>();
-  stack.push(10);
-  stack.push(20);
-  print(stack.peek()); // 20
-  print(stack.pop());  // 20
 
-  // Merge Lists
-  var hasil = mergeLists([1, 2], [3, 4]);
-  print(hasil);
+  var email = 'test@mail.com';
+  var password = 'Password123';
+  var number = 10;
 
-  // Response
-  var res = Response<String>(data: "Berhasil");
-  print(res.data);
+  print(email.isEmail);
+  print(password.isStrongPassword);
+  print(number.isEven);
+  print(number.isPositive);
 }
 </pre>
 
 </div>
 
 </div>
-<button class="btn" onclick="openPopup('https://dartpad.dev/809debcb102a9e0cebde52070dff67e6?run=true')">Lihat DartPad</button>
+<button class="btn" onclick="openPopup('https://dartpad.dev/a2e9940df93b07ee4874f5200a36c9b8?run=true')">Lihat DartPad</button>
 </div>
+
+<div class="card">
+<h2>Ringkasan & Best Practices</h2>
+<p>
+Extension Methods adalah fitur pada Dart yang digunakan untuk menambahkan method baru ke tipe data atau class tanpa mengubah kode aslinya. Fitur ini membuat kode meniadi lebih singkat, rapi, mudah dibaca, dan reusable. Extension juga mendukung generic type, nul| safety, custom class, qetter, setter hingga operator sehingga sangat membantu dalam pengembangan aplikasi Dart
+<ul>
+<li>Best Practices</li>
+<li>Gunakan nama Extencion yang jelas dan mudah dipahami</li>
+<li>Pisahkan extencion berdasarkan tipe data</li>
+<li>Hindari penggunaan extencion secara berlebihan</li>
+<li>Perhatikan null safety agar kode tetap aman</li>
+<li>Tambahkan komentar atau dokumentasi jika diperlukan</li>
+</ul>
+</p>
+</div>
+
 
 <!-- POPUP -->
 
@@ -1428,4 +908,3 @@ document.getElementById("dartFrame").src="";
 
 </body>
 </html>
-
